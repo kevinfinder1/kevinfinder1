@@ -15,35 +15,55 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # 1. Generar la Serpiente
-      - name: generate snake.svg
+      - name: Generate snake animation
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
-          outputs: dist/snake.svg?palette=github-dark
+          outputs: |
+            dist/snake.svg
+            dist/snake-dark.svg?palette=github-dark
 
-      # 2. Generar el Pacman
-      - name: generate pacman-contribution-graph.svg
+      # 2. Generar el Pacman (modo claro)
+      - name: Generate pacman contribution graph (light)
         uses: abozanona/pacman-contribution-graph@main
         with:
           github_user_name: ${{ github.repository_owner }}
-
-      # 3. Mover el archivo de Pacman a la carpeta dist (importante para el despliegue)
-      - name: move pacman to dist
+          
+      # 3. Mover el archivo de Pacman modo claro
+      - name: Move pacman light theme to dist
         run: |
           mkdir -p dist
           mv pacman-contribution-graph.svg dist/
 
-      # 4. Desplegar ambos archivos a la rama 'output'
-      - name: push animations to the output branch
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+      # 4. Generar el Pacman (modo oscuro)
+      - name: Generate pacman contribution graph (dark)
+        uses: abozanona/pacman-contribution-graph@main
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          theme: dark
+          
+      # 5. Mover el archivo de Pacman modo oscuro
+      - name: Move pacman dark theme to dist
+        run: mv pacman-contribution-graph.svg dist/pacman-contribution-graph-dark.svg
+
+      # 6. Verificar archivos generados
+      - name: Verify generated files
+        run: |
+          echo "Files in dist directory:"
+          ls -la dist/
+
+      # 7. Desplegar todas las animaciones a la rama 'output'
+      - name: Deploy animations to output branch
+        uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
           build_dir: dist
+          commit_message: "Update profile animations"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
