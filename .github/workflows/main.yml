@@ -2,7 +2,7 @@ name: Generate Animations
 
 on:
   schedule:
-    - cron: "0 */24 * * *"
+    - cron: "0 */24 * * *" 
   workflow_dispatch:
   push:
     branches:
@@ -14,8 +14,8 @@ jobs:
     timeout-minutes: 10
     
     steps:
-      # Genera la serpiente
-      - name: generate-snake-game-from-github-contribution-grid
+      # Genera la Serpiente
+      - name: generate-snake-svg
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
@@ -25,18 +25,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Genera el Pacman (usando una paleta compatible)
-      - name: generate-pacman-graph
-        uses: Platane/snk@v3
+      # Genera el Pac-Man
+      - name: generate-pacman-svg
+        uses: jonasmerlin/pacman-contribution-graph-action@master
         with:
           github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/pacman-contribution-graph.svg?palette=github-light
-            dist/pacman-contribution-graph-dark.svg?palette=github-dark
+          # El archivo debe llamarse exactamente como en tu README
+          output_svg: dist/pacman-contribution-graph.svg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: push outputs to output branch
+      # Sube ambos archivos a la rama 'output'
+      - name: push outputs
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
