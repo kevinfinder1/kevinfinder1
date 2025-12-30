@@ -8,13 +8,23 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     
     steps:
-      # Genera la Serpiente
+      # Genera el Gráfico 3D (Sustituye al Pac-Man de forma más profesional)
+      - name: github-profile-3d-contrib
+        uses: yoshi389111/github-profile-3d-contrib@0.7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      # Genera la Serpiente (Platane/snk es la más estable)
       - name: generate-snake-svg
         uses: Platane/snk@v3
         with:
@@ -25,17 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Genera el Pac-Man
-      - name: generate-pacman-svg
-        uses: jonasmerlin/pacman-contribution-graph-action@master
-        with:
-          github_user_name: ${{ github.repository_owner }}
-          # El archivo debe llamarse exactamente como en tu README
-          output_svg: dist/pacman-contribution-graph.svg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Sube ambos archivos a la rama 'output'
+      # Sube todo a la rama 'output'
       - name: push outputs
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
