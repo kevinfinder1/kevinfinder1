@@ -78,7 +78,7 @@ Collaborating with Babahoyo City Hall on Geographic Information Systems (GIS) an
 
 ## 📊 GitHub Activity
 
-<img src="https://raw.githubusercontent.com/kevinfinder1/kevinfinder1/output/snake.svg" alt="Snake animation" />
+![Snake](https://raw.githubusercontent.com/kevinfinder1/kevinfinder1/output/snake.svg)
 
 ###
 
